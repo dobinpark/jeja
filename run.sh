@@ -5,7 +5,7 @@ echo "   Spring Boot 애플리케이션 시작"
 echo "===================================="
 echo
 
-echo "[1/3] Git 저장소 업데이트 중..."
+echo "[1/4] Git 저장소 업데이트 중..."
 
 # 최신 변경사항 가져오기
 git pull origin main
@@ -15,7 +15,26 @@ if [ $? -ne 0 ]; then
 fi
 
 echo
-echo "[2/3] 프로젝트 빌드 중..."
+echo "[2/4] 파일 권한 설정 중..."
+
+# gradlew 실행 권한 부여
+chmod +x gradlew
+if [ $? -eq 0 ]; then
+    echo "gradlew 실행 권한 부여 완료"
+else
+    echo "gradlew 권한 설정 실패"
+fi
+
+# run.sh 실행 권한 부여
+chmod +x run.sh
+if [ $? -eq 0 ]; then
+    echo "run.sh 실행 권한 부여 완료"
+else
+    echo "run.sh 권한 설정 실패"
+fi
+
+echo
+echo "[3/4] 프로젝트 빌드 중..."
 ./gradlew clean build -x test
 if [ $? -ne 0 ]; then
     echo "빌드 실패!"
@@ -23,7 +42,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo
-echo "[3/3] 애플리케이션 실행 중..."
+echo "[4/4] 애플리케이션 실행 중..."
 echo "서버가 시작되면 http://localhost:8080 으로 접속하세요"
 echo "종료하려면 Ctrl+C를 누르세요"
 echo
