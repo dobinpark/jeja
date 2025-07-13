@@ -7,8 +7,8 @@ echo
 
 echo "[1/4] Git 저장소 업데이트 중..."
 
-# 최신 변경사항 가져오기
-git pull origin main
+# master 브랜치에서 최신 변경사항 가져오기
+git pull origin master
 if [ $? -ne 0 ]; then
     echo "Git pull 실패!"
     exit 1
