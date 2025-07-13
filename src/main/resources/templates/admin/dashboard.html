@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>어드민 대시보드</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .header h1 {
+            color: #43a047;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .stage-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .stage-button {
+            display: block;
+            padding: 15px 20px;
+            background: #43a047;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(67, 160, 71, 0.3);
+        }
+        
+        .stage-button:hover {
+            background: #388e3c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(67, 160, 71, 0.4);
+        }
+        
+        .team-overview {
+            margin-top: 30px;
+        }
+        
+        .team-overview h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .team-row {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #fafafa;
+        }
+        
+        .team-row:last-child {
+            border-bottom: none;
+        }
+        
+        .team-row h3 {
+            color: #43a047;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .stage-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .stage-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .completed {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .not-completed {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .no-data h2 {
+            color: #999;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .stage-buttons {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .stage-button {
+                padding: 12px 15px;
+                font-size: 1em;
+            }
+            
+            .stage-status {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 어드민 대시보드</h1>
+            <p>스테이지별 조별 답안 제출 현황을 확인할 수 있습니다</p>
+        </div>
+        
+        <!-- 스테이지별 상세 보기 버튼 -->
+        <div class="stage-buttons">
+            <a href="/admin/stage/1" class="stage-button">📋 스테이지 1 상세</a>
+            <a href="/admin/stage/2" class="stage-button">📋 스테이지 2 상세</a>
+            <a href="/admin/stage/3" class="stage-button">📋 스테이지 3 상세</a>
+            <a href="/admin/stage/4" class="stage-button">📋 스테이지 4 상세</a>
+        </div>
+        
+        <!-- 팀별 제출 현황 -->
+        <div th:if="${teamSubmissions != null and !#lists.isEmpty(teamSubmissions)}" class="team-overview">
+            <h2>📊 팀별 진행 현황 요약</h2>
+            <div th:each="team : ${teamSubmissions}" class="team-row">
+                <h3 th:text="${team.teamName}">팀명</h3>
+                <div class="stage-status">
+                    <div th:class="${team.stage1 != null and team.stage1.completed} ? 'stage-item completed' : 'stage-item not-completed'">
+                        <span>스테이지 1</span><br>
+                        <span th:text="${team.stage1 != null and team.stage1.completed} ? '완료' : '미완료'">상태</span>
+                    </div>
+                    <div th:class="${team.stage2 != null and team.stage2.completed} ? 'stage-item completed' : 'stage-item not-completed'">
+                        <span>스테이지 2</span><br>
+                        <span th:text="${team.stage2 != null and team.stage2.completed} ? '완료' : '미완료'">상태</span>
+                    </div>
+                    <div th:class="${team.stage3 != null and team.stage3.completed} ? 'stage-item completed' : 'stage-item not-completed'">
+                        <span>스테이지 3</span><br>
+                        <span th:text="${team.stage3 != null and team.stage3.completed} ? '완료' : '미완료'">상태</span>
+                    </div>
+                    <div th:class="${team.stage4 != null and team.stage4.completed} ? 'stage-item completed' : 'stage-item not-completed'">
+                        <span>스테이지 4</span><br>
+                        <span th:text="${team.stage4 != null and team.stage4.completed} ? '완료' : '미완료'">상태</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 데이터가 없는 경우 -->
+        <div th:if="${teamSubmissions == null or #lists.isEmpty(teamSubmissions)}" class="no-data">
+            <h2>📋 현재 제출된 데이터가 없습니다</h2>
+            <p>아직 어떤 조도 답안을 제출하지 않았습니다.</p>
+            <p>위의 스테이지 버튼을 클릭하여 각 스테이지별 상세 현황을 확인할 수 있습니다.</p>
+        </div>
+    </div>
+</body>
+</html>

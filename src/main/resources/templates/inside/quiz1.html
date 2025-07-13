@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title th:text="'스테이지 ' + ${stageNumber} + ' - ' + ${teamNumber} + '조 ' + ${questionNumber} + '번 문제'">문제 페이지</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px 15px;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #333333;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .question-info {
+            font-size: 1em;
+            color: #666666;
+            margin-bottom: 10px;
+        }
+        
+        .question-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #333333;
+        }
+        
+        .question-container {
+            background: #f8f9fa;
+            padding: 25px 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+            margin-bottom: 25px;
+        }
+        
+        .question-text {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.4;
+            text-align: center;
+            color: #333333;
+        }
+        
+        /* 객관식 스타일 */
+        .multiple-choice {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .choice-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .choice-item:hover {
+            background: #f8f9fa;
+            border-color: #43a047;
+        }
+        
+        .choice-item input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+            accent-color: #43a047;
+        }
+        
+        .choice-item label {
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+            color: #333333;
+        }
+        
+        /* 주관식 스타일 */
+        .subjective-answer {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            background: #ffffff;
+            color: #333;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .subjective-answer:focus {
+            outline: none;
+            background: #ffffff;
+            border-color: #43a047;
+            box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.2);
+        }
+        
+        .subjective-answer::placeholder {
+            color: #666;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: bold;
+            background: #43a047;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3);
+        }
+        
+        .submit-btn:hover,
+        .submit-btn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 160, 71, 0.4);
+            background: #388e3c;
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 18px;
+            background: #f8f9fa;
+            color: #333333;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .back-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* 모바일 최적화 */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 10px;
+            }
+            
+            .question-title {
+                font-size: 1.3em;
+            }
+            
+            .question-text {
+                font-size: 1.1em;
+            }
+            
+            .question-container {
+                padding: 20px 15px;
+            }
+            
+            .choice-item {
+                padding: 12px;
+            }
+            
+            .choice-item label {
+                font-size: 0.9em;
+            }
+            
+            .subjective-answer {
+                min-height: 100px;
+                font-size: 15px;
+            }
+            
+            .submit-btn {
+                padding: 16px;
+                font-size: 16px;
+            }
+            
+            .back-btn {
+                top: 15px;
+                left: 15px;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .question-title {
+                font-size: 1.2em;
+            }
+            
+            .question-text {
+                font-size: 1em;
+            }
+        }
+        
+        /* 가로 화면 (모바일 가로) */
+        @media (max-width: 768px) and (orientation: landscape) {
+            body {
+                padding: 10px 15px;
+            }
+            
+            .question-title {
+                font-size: 1.3em;
+                margin-bottom: 20px;
+            }
+            
+            .question-container {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+            
+            .choice-item {
+                padding: 10px;
+            }
+            
+            .subjective-answer {
+                min-height: 80px;
+                font-size: 14px;
+            }
+            
+            .submit-btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a th:href="@{/team{stageNumber}/{teamNumber}/select(stageNumber=${stageNumber}, teamNumber=${teamNumber})}" class="back-btn">← 문제 선택</a>
+    
+    <div class="container">
+        <div class="header">
+            <div class="question-info" th:text="'스테이지 ' + ${stageNumber} + ' | ' + ${teamNumber} + '조'">문제 정보</div>
+            <div class="question-title" th:text="${questionNumber} + '번 문제'">문제 제목</div>
+        </div>
+        
+        <form th:action="@{/team{stageNumber}/{teamNumber}/quiz/{questionNumber}(stageNumber=${stageNumber}, teamNumber=${teamNumber}, questionNumber=${questionNumber})}" method="post">
+            
+            <!-- 1번 문제 -->
+            <div th:if="${questionNumber == 1}" class="question-container">
+                <div class="question-text">
+                    여기에 1번 문제 내용을 입력하세요
+                </div>
+                
+                <!-- 객관식 예시 -->
+                <div class="multiple-choice">
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="A" id="q1_a">
+                        <label for="q1_a">선택지 A</label>
+                    </div>
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="B" id="q1_b">
+                        <label for="q1_b">선택지 B</label>
+                    </div>
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="C" id="q1_c">
+                        <label for="q1_c">선택지 C</label>
+                    </div>
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="D" id="q1_d">
+                        <label for="q1_d">선택지 D</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 2번 문제 -->
+            <div th:if="${questionNumber == 2}" class="question-container">
+                <div class="question-text">
+                    여기에 2번 문제 내용을 입력하세요
+                </div>
+                
+                <!-- 주관식 예시 -->
+                <textarea name="answer" class="subjective-answer" placeholder="답안을 입력하세요" required></textarea>
+            </div>
+            
+            <!-- 3번 문제 -->
+            <div th:if="${questionNumber == 3}" class="question-container">
+                <div class="question-text">
+                    여기에 3번 문제 내용을 입력하세요
+                </div>
+                
+                <!-- 객관식 예시 -->
+                <div class="multiple-choice">
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="A" id="q3_a">
+                        <label for="q3_a">선택지 A</label>
+                    </div>
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="B" id="q3_b">
+                        <label for="q3_b">선택지 B</label>
+                    </div>
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="C" id="q3_c">
+                        <label for="q3_c">선택지 C</label>
+                    </div>
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="D" id="q3_d">
+                        <label for="q3_d">선택지 D</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 4번 문제 -->
+            <div th:if="${questionNumber == 4}" class="question-container">
+                <div class="question-text">
+                    여기에 4번 문제 내용을 입력하세요
+                </div>
+                
+                <!-- 주관식 예시 -->
+                <textarea name="answer" class="subjective-answer" placeholder="답안을 입력하세요" required></textarea>
+            </div>
+            
+            <!-- 5번 문제 -->
+            <div th:if="${questionNumber == 5}" class="question-container">
+                <div class="question-text">
+                    여기에 5번 문제 내용을 입력하세요
+                </div>
+                
+                <!-- 객관식 예시 -->
+                <div class="multiple-choice">
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="A" id="q5_a">
+                        <label for="q5_a">선택지 A</label>
+                    </div>
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="B" id="q5_b">
+                        <label for="q5_b">선택지 B</label>
+                    </div>
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="C" id="q5_c">
+                        <label for="q5_c">선택지 C</label>
+                    </div>
+                    <div class="choice-item">
+                        <input type="radio" name="answer" value="D" id="q5_d">
+                        <label for="q5_d">선택지 D</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">답안 제출</button>
+        </form>
+    </div>
+</body>
+</html>
