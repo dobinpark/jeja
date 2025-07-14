@@ -88,4 +88,14 @@ public class QuizService {
     public List<Quiz> getAllAnswers() {
         return quizRepository.findAllByOrderByIdDesc();
     }
+
+    public String getTeamStatus(int stageNumber, int teamNumber) {
+        if (hasTeamSubmittedInStage(stageNumber, teamNumber)) {
+            return "COMPLETED"; // 답안 제출 완료
+        } else if (hasTeamSelectedQuestionInStage(stageNumber, teamNumber)) {
+            return "IN_PROGRESS"; // 문제 선택했지만 미제출
+        } else {
+            return "NOT_STARTED"; // 아무것도 안함
+        }
+    }
 }

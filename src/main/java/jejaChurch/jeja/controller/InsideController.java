@@ -33,7 +33,7 @@ public class InsideController {
         return "inside/password" + stageNumber;
     }
 
-    // 패스워드 검증
+    // 비밀번호 검증
     @PostMapping("/team{stageNumber}/{teamNumber}/verify")
     public String verifyPassword(
             @PathVariable int stageNumber,
@@ -41,24 +41,29 @@ public class InsideController {
             @RequestParam String password,
             Model model) {
 
-        if (teamService.verifyPassword(teamNumber, password)) {
-            return "redirect:/team" + stageNumber + "/" + teamNumber + "/select";
-        } else {
+        if (!teamService.verifyPassword(teamNumber, password)) {
             model.addAttribute("stageNumber", stageNumber);
             model.addAttribute("teamNumber", teamNumber);
             model.addAttribute("error", "비밀번호가 틀렸습니다.");
             return "inside/password" + stageNumber;
         }
-    }
 
-    // 제출 여부 확인 메서드 추가
-    private boolean checkIfAlreadySubmitted(int stageNumber, int teamNumber, Model model) {
-        if (quizService.hasTeamSubmittedInStage(stageNumber, teamNumber)) {
-            model.addAttribute("stageNumber", stageNumber);
-            model.addAttribute("teamNumber", teamNumber);
-            return true;
+        // 🆕 팀 상태에 따른 분기 처리
+        String teamStatus = quizService.getTeamStatus(stageNumber, teamNumber);
+
+        switch (teamStatus) {
+            case "COMPLETED":
+                model.addAttribute("stageNumber", stageNumber);
+                model.addAttribute("teamNumber", teamNumber);
+                return "inside/already-submitted" + stageNumber;
+
+            case "IN_PROGRESS":
+                Integer selectedQuestionNumber = quizService.getSelectedQuestionNumber(stageNumber, teamNumber);
+                return "redirect:/team" + stageNumber + "/" + teamNumber + "/quiz/" + selectedQuestionNumber;
+
+            default: // NOT_STARTED
+                return "redirect:/team" + stageNumber + "/" + teamNumber + "/select";
         }
-        return false;
     }
 
     // 문제 선택 페이지
