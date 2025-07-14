@@ -16,6 +16,33 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
 
+    // 🆕 해당 조가 어떤 스테이지든 문제를 풀었는지 확인
+    public boolean hasTeamEverSubmitted(int teamNumber) {
+        return quizRepository.existsByTeamNumberAndIsAnswerSubmittedTrue(teamNumber);
+    }
+
+    // 🆕 해당 조가 어떤 스테이지든 문제를 선택했는지 확인
+    public boolean hasTeamEverSelectedQuestion(int teamNumber) {
+        return quizRepository.existsByTeamNumberAndQuestionSelectedAtIsNotNull(teamNumber);
+    }
+
+    // 🆕 해당 조가 선택한 문제 정보 가져오기 (스테이지 무관)
+    public Quiz getTeamSelectedQuiz(int teamNumber) {
+        return quizRepository.findByTeamNumberAndQuestionSelectedAtIsNotNull(teamNumber)
+                .orElse(null);
+    }
+
+    // 🔄 팀 상태 확인 (전체 스테이지 기준)
+    public String getTeamStatusGlobal(int teamNumber) {
+        if (hasTeamEverSubmitted(teamNumber)) {
+            return "COMPLETED"; // 이미 어떤 스테이지에서 답안 제출 완료
+        } else if (hasTeamEverSelectedQuestion(teamNumber)) {
+            return "IN_PROGRESS"; // 어떤 스테이지에서 문제 선택했지만 미제출
+        } else {
+            return "NOT_STARTED"; // 아무것도 안함
+        }
+    }
+
     // 🆕 문제 선택 여부 확인
     public boolean hasTeamSelectedQuestionInStage(int stageNumber, int teamNumber) {
         return quizRepository.existsByStageNumberAndTeamNumberAndQuestionSelectedAtIsNotNull(stageNumber, teamNumber);

@@ -11,6 +11,15 @@ import jejaChurch.jeja.entity.Quiz;
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
+    // 🆕 해당 조가 답안을 제출했는지 확인 (스테이지 무관)
+    boolean existsByTeamNumberAndIsAnswerSubmittedTrue(int teamNumber);
+
+    // 🆕 해당 조가 문제를 선택했는지 확인 (스테이지 무관)
+    boolean existsByTeamNumberAndQuestionSelectedAtIsNotNull(int teamNumber);
+
+    // 🆕 해당 조가 선택한 문제 정보 가져오기 (스테이지 무관)
+    Optional<Quiz> findByTeamNumberAndQuestionSelectedAtIsNotNull(int teamNumber);
+
     // 해당 스테이지에서 해당 조가 제출했는지 확인
     boolean existsByStageNumberAndTeamNumber(int stageNumber, int teamNumber);
 

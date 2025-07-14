@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jejaChurch.jeja.entity.Quiz;
 import jejaChurch.jeja.service.QuizService;
 import jejaChurch.jeja.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -48,20 +49,25 @@ public class InsideController {
             return "inside/password" + stageNumber;
         }
 
-        // 🆕 팀 상태에 따른 분기 처리
-        String teamStatus = quizService.getTeamStatus(stageNumber, teamNumber);
+        // 🔄 전체 스테이지 기준으로 팀 상태 확인
+        String teamStatus = quizService.getTeamStatusGlobal(teamNumber);
 
         switch (teamStatus) {
             case "COMPLETED":
-                model.addAttribute("stageNumber", stageNumber);
+                // 🆕 이미 다른 스테이지에서 완료했다면
+                Quiz completedQuiz = quizService.getTeamSelectedQuiz(teamNumber);
+                model.addAttribute("stageNumber", completedQuiz.getStageNumber());
                 model.addAttribute("teamNumber", teamNumber);
-                return "inside/already-submitted" + stageNumber;
+                return "inside/already-submitted" + completedQuiz.getStageNumber();
 
             case "IN_PROGRESS":
-                Integer selectedQuestionNumber = quizService.getSelectedQuestionNumber(stageNumber, teamNumber);
-                return "redirect:/team" + stageNumber + "/" + teamNumber + "/quiz/" + selectedQuestionNumber;
+                // 🆕 다른 스테이지에서 진행 중이라면 해당 스테이지로 리다이렉트
+                Quiz inProgressQuiz = quizService.getTeamSelectedQuiz(teamNumber);
+                return "redirect:/team" + inProgressQuiz.getStageNumber() + "/" + teamNumber + "/quiz/"
+                        + inProgressQuiz.getQuestionNumber();
 
             default: // NOT_STARTED
+                // 🆕 현재 스테이지에서 새로 시작
                 return "redirect:/team" + stageNumber + "/" + teamNumber + "/select";
         }
     }
