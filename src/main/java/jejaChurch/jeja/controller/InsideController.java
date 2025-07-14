@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jejaChurch.jeja.entity.Quiz;
 import jejaChurch.jeja.service.QuizService;
 import jejaChurch.jeja.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,7 @@ public class InsideController {
         return "inside/password" + stageNumber;
     }
 
-    // 비밀번호 검증
+    // 🔄 비밀번호 검증 - 스테이지별 독립적 운영
     @PostMapping("/team{stageNumber}/{teamNumber}/verify")
     public String verifyPassword(
             @PathVariable int stageNumber,
@@ -49,35 +48,35 @@ public class InsideController {
             return "inside/password" + stageNumber;
         }
 
-        // 🔄 전체 스테이지 기준으로 팀 상태 확인
-        String teamStatus = quizService.getTeamStatusGlobal(teamNumber);
+        // 🔄 현재 스테이지에서만 상태 확인
+        String teamStatus = quizService.getTeamStatus(stageNumber, teamNumber);
 
         switch (teamStatus) {
             case "COMPLETED":
-                // 🆕 이미 다른 스테이지에서 완료했다면
-                Quiz completedQuiz = quizService.getTeamSelectedQuiz(teamNumber);
-                model.addAttribute("stageNumber", completedQuiz.getStageNumber());
+                // 🆕 이미 완료한 경우 경고 페이지 표시
+                model.addAttribute("stageNumber", stageNumber);
                 model.addAttribute("teamNumber", teamNumber);
-                return "inside/already-submitted" + completedQuiz.getStageNumber();
+                return "inside/already-submitted" + stageNumber;
 
             case "IN_PROGRESS":
-                // 🆕 다른 스테이지에서 진행 중이라면 해당 스테이지로 리다이렉트
-                Quiz inProgressQuiz = quizService.getTeamSelectedQuiz(teamNumber);
-                return "redirect:/team" + inProgressQuiz.getStageNumber() + "/" + teamNumber + "/quiz/"
-                        + inProgressQuiz.getQuestionNumber();
+                // 🆕 진행 중인 문제로 리다이렉트
+                Integer selectedQuestionNumber = quizService.getSelectedQuestionNumber(stageNumber, teamNumber);
+                return "redirect:/team" + stageNumber + "/" + teamNumber + "/quiz/" + selectedQuestionNumber;
 
             default: // NOT_STARTED
-                // 🆕 현재 스테이지에서 새로 시작
+                // 🆕 새로 시작 - 문제 선택 페이지로
                 return "redirect:/team" + stageNumber + "/" + teamNumber + "/select";
         }
     }
 
-    // 문제 선택 페이지
+    // 🔄 문제 선택 페이지
     @GetMapping("/team{stageNumber}/{teamNumber}/select")
     public String questionSelectPage(@PathVariable int stageNumber, @PathVariable int teamNumber, Model model) {
 
-        // 이미 답안을 완전히 제출했는지 확인
+        // 🆕 이미 답안을 완전히 제출했는지 확인
         if (quizService.hasTeamSubmittedInStage(stageNumber, teamNumber)) {
+            model.addAttribute("stageNumber", stageNumber);
+            model.addAttribute("teamNumber", teamNumber);
             return "inside/already-submitted" + stageNumber;
         }
 
@@ -92,7 +91,7 @@ public class InsideController {
         return "inside/question" + stageNumber;
     }
 
-    // 문제 선택 처리 - 즉시 DB에 저장
+    // 🔄 문제 선택 처리 - 즉시 DB에 저장
     @PostMapping("/team{stageNumber}/{teamNumber}/select")
     public String selectQuestion(
             @PathVariable int stageNumber,
@@ -112,7 +111,7 @@ public class InsideController {
         }
     }
 
-    // 문제 페이지
+    // 🔄 문제 페이지
     @GetMapping("/team{stageNumber}/{teamNumber}/quiz/{questionNumber}")
     public String quizPage(
             @PathVariable int stageNumber,
@@ -120,8 +119,10 @@ public class InsideController {
             @PathVariable int questionNumber,
             Model model) {
 
-        // 이미 답안을 완전히 제출했는지 확인
+        // 🆕 이미 답안을 완전히 제출했는지 확인
         if (quizService.hasTeamSubmittedInStage(stageNumber, teamNumber)) {
+            model.addAttribute("stageNumber", stageNumber);
+            model.addAttribute("teamNumber", teamNumber);
             return "inside/already-submitted" + stageNumber;
         }
 
@@ -145,7 +146,7 @@ public class InsideController {
         return "inside/quiz" + stageNumber;
     }
 
-    // 답안 제출 확인 페이지로 이동
+    // 🔄 답안 제출 확인 페이지로 이동
     @PostMapping("/team{stageNumber}/{teamNumber}/quiz/{questionNumber}")
     public String submitToConfirm(
             @PathVariable int stageNumber,
@@ -154,8 +155,10 @@ public class InsideController {
             @RequestParam(required = false) String answer,
             Model model) {
 
-        // 이미 답안을 완전히 제출했는지 확인
+        // 🆕 이미 답안을 완전히 제출했는지 확인
         if (quizService.hasTeamSubmittedInStage(stageNumber, teamNumber)) {
+            model.addAttribute("stageNumber", stageNumber);
+            model.addAttribute("teamNumber", teamNumber);
             return "inside/already-submitted" + stageNumber;
         }
 
@@ -182,6 +185,13 @@ public class InsideController {
             @RequestParam String answer,
             Model model) {
 
+        // 🆕 이미 답안을 완전히 제출했는지 확인
+        if (quizService.hasTeamSubmittedInStage(stageNumber, teamNumber)) {
+            model.addAttribute("stageNumber", stageNumber);
+            model.addAttribute("teamNumber", teamNumber);
+            return "inside/already-submitted" + stageNumber;
+        }
+
         model.addAttribute("stageNumber", stageNumber);
         model.addAttribute("teamNumber", teamNumber);
         model.addAttribute("questionNumber", questionNumber);
@@ -190,7 +200,7 @@ public class InsideController {
         return "inside/confirm" + stageNumber;
     }
 
-    // 최종 답안 제출
+    // 🔄 최종 답안 제출
     @PostMapping("/team{stageNumber}/{teamNumber}/submit")
     public String submitAnswer(
             @PathVariable int stageNumber,
@@ -207,7 +217,7 @@ public class InsideController {
             return "inside/complete" + stageNumber;
 
         } catch (IllegalStateException e) {
-            // 🚨 중복 제출 시 예외 처리 추가
+            // 🚨 중복 제출 시 예외 처리
             model.addAttribute("stageNumber", stageNumber);
             model.addAttribute("teamNumber", teamNumber);
             model.addAttribute("error", e.getMessage());
