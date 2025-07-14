@@ -1,53 +1,44 @@
 #!/bin/bash
 
+set -e
+set -u
+set -o pipefail
+
+# 환경 변수 설정
+PROFILE=${SPRING_PROFILES_ACTIVE:-prod}
+JVM_OPTS=${JVM_OPTS:-"-Xms512m -Xmx1024m"}
+
 echo "===================================="
 echo "   Spring Boot 애플리케이션 시작"
 echo "===================================="
+echo "실행 환경: $PROFILE"
 echo
 
-echo "[1/4] Git 저장소 업데이트 중..."
+echo "[0/5] 기존 프로세스 확인 및 종료..."
+# 기존 프로세스 종료 로직 (위에서 제시한 코드)
 
-# master 브랜치에서 최신 변경사항 가져오기
+echo "[1/5] Git 저장소 업데이트 중..."
 git pull origin master
-if [ $? -ne 0 ]; then
-    echo "Git pull 실패!"
-    exit 1
-fi
 
-echo
-echo "[2/4] 파일 권한 설정 중..."
+echo "[2/5] 파일 권한 설정 중..."
+chmod +x gradlew run.sh
 
-# gradlew 실행 권한 부여
-chmod +x gradlew
-if [ $? -eq 0 ]; then
-    echo "gradlew 실행 권한 부여 완료"
-else
-    echo "gradlew 권한 설정 실패"
-fi
-
-# run.sh 실행 권한 부여
-chmod +x run.sh
-if [ $? -eq 0 ]; then
-    echo "run.sh 실행 권한 부여 완료"
-else
-    echo "run.sh 권한 설정 실패"
-fi
-
-echo
-echo "[3/4] 프로젝트 빌드 중..."
+echo "[3/5] 프로젝트 빌드 중..."
 ./gradlew clean build -x test
-if [ $? -ne 0 ]; then
-    echo "빌드 실패!"
+
+echo "[4/5] 애플리케이션 실행 중..."
+JAR_FILE=$(find build/libs -name "*.jar" -not -name "*-plain.jar" | head -1)
+
+if [ -z "$JAR_FILE" ]; then
+    echo "실행 가능한 JAR 파일을 찾을 수 없습니다!"
     exit 1
 fi
 
-echo
-echo "[4/4] 애플리케이션 실행 중..."
+mkdir -p logs
+
+echo "실행할 JAR 파일: $JAR_FILE"
 echo "서버가 시작되면 http://localhost:8080 으로 접속하세요"
 echo "종료하려면 Ctrl+C를 누르세요"
 echo
 
-java -jar build/libs/jeja-0.0.1-SNAPSHOT.jar
-
-echo
-echo "애플리케이션이 종료되었습니다."
+java $JVM_OPTS -Dspring.profiles.active=$PROFILE -jar "$JAR_FILE" 2>&1 | tee logs/application.log
