@@ -1,322 +1,447 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title th:text="'스테이지 ' + ${stageNumber} + ' - ' + ${teamNumber} + '조 문제 선택'">문제 선택</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title
+      th:text="'스테이지 ' + ${stageNumber} + ' - ' + ${teamNumber} + '조 문제 선택'"
+    >
+      문제 선택
+    </title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        text-align: center;
+        padding: 20px 15px;
+        background: #ffffff;
+        min-height: 100vh;
+        color: #333333;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+        font-weight: 700;
+        color: #333333;
+      }
+
+      .team-info {
+        font-size: 1.1em;
+        color: #666666;
+        margin-bottom: 10px;
+        font-weight: 500;
+      }
+
+      .stage-info {
+        font-size: 1em;
+        color: #666666;
+        margin-bottom: 35px;
+        font-weight: 400;
+      }
+
+      .question-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+
+      .question-button {
+        display: block;
+        padding: 25px 15px;
+        font-size: 20px;
+        font-weight: bold;
+        background: #43a047;
+        color: white;
+        text-decoration: none;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(67, 160, 71, 0.3);
+        transition: all 0.3s ease;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .question-button:hover,
+      .question-button:active {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(67, 160, 71, 0.4);
+        background: #388e3c;
+      }
+
+      .question-button:active {
+        transform: scale(0.98);
+      }
+
+      /* 5점 버튼을 가운데 정렬하되 크기는 동일하게 */
+      .question-button:nth-child(5) {
+        grid-column: 1 / -1;
+        width: calc(50% - 7.5px); /* 다른 버튼과 동일한 너비 */
+        margin: 0 auto;
+      }
+
+      .question-number {
+        font-size: 1.2em;
+        margin-bottom: 5px;
+      }
+
+      .question-label {
+        font-size: 0.9em;
+        opacity: 0.9;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 12px 18px;
+        background: #f8f9fa;
+        color: #333333;
+        text-decoration: none;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .back-btn:hover {
+        background: #e9ecef;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .footer-info {
+        font-size: 0.9em;
+        color: #666666;
+        margin-top: 20px;
+        line-height: 1.4;
+      }
+
+      .warning-message {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border: 2px solid #ffc107;
+        border-radius: 12px;
+        padding: 15px;
+        margin: 20px 0 25px 0;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+        animation: pulse 2s infinite;
+      }
+
+      .warning-icon {
+        font-size: 1.5em;
+        margin-bottom: 8px;
+      }
+
+      .warning-text {
+        font-size: 0.95em;
+        line-height: 1.5;
+        color: #856404;
+        font-weight: 500;
+      }
+
+      .warning-text strong {
+        color: #533f03;
+        font-size: 1.1em;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .warning-emphasis {
+        color: #dc3545;
+        font-weight: 700;
+        font-size: 1.05em;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
         }
-        
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            text-align: center; 
-            padding: 20px 15px;
-            background: #ffffff;
-            min-height: 100vh;
-            color: #333333;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        50% {
+          transform: scale(1.02);
         }
-        
-        .container {
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto;
+        100% {
+          transform: scale(1);
         }
-        
+      }
+
+      /* 모바일 반응형 */
+      @media (max-width: 480px) {
+        .warning-message {
+          padding: 12px;
+          margin: 15px 0 20px 0;
+        }
+
+        .warning-text {
+          font-size: 0.85em;
+        }
+
+        .warning-icon {
+          font-size: 1.3em;
+          margin-bottom: 6px;
+        }
+      }
+
+      @media (max-width: 768px) and (orientation: landscape) {
+        .warning-message {
+          padding: 10px;
+          margin: 10px 0 15px 0;
+        }
+
+        .warning-text {
+          font-size: 0.8em;
+          line-height: 1.4;
+        }
+      }
+
+      /* 모바일 세로 화면 */
+      @media (max-width: 480px) and (orientation: portrait) {
+        body {
+          padding: 15px 10px;
+        }
+
         h1 {
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            font-weight: 700;
-            color: #333333;
+          font-size: 1.5em;
+          margin-bottom: 12px;
         }
-        
+
         .team-info {
-            font-size: 1.1em;
-            color: #666666;
-            margin-bottom: 10px;
-            font-weight: 500;
+          font-size: 1em;
+          margin-bottom: 8px;
         }
-        
+
         .stage-info {
-            font-size: 1em;
-            color: #666666;
-            margin-bottom: 35px;
-            font-weight: 400;
+          font-size: 0.9em;
+          margin-bottom: 25px;
         }
-        
+
         .question-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
+          gap: 12px;
         }
-        
-        .question-button { 
-            display: block;
-            padding: 25px 15px;
-            font-size: 20px;
-            font-weight: bold;
-            background: #43a047;
-            color: white;
-            text-decoration: none;
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 6px 20px rgba(67, 160, 71, 0.3);
-            transition: all 0.3s ease;
-            min-height: 80px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+
+        .question-button {
+          padding: 20px 12px;
+          font-size: 18px;
+          min-height: 70px;
         }
-        
-        .question-button:hover,
-        .question-button:active { 
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(67, 160, 71, 0.4);
-            background: #388e3c;
-        }
-        
-        .question-button:active {
-            transform: scale(0.98);
-        }
-        
-        /* 5점 버튼을 가운데 정렬하되 크기는 동일하게 */
+
         .question-button:nth-child(5) {
-            grid-column: 1 / -1;
-            width: calc(50% - 7.5px); /* 다른 버튼과 동일한 너비 */
-            margin: 0 auto;
+          width: calc(50% - 6px); /* 모바일에서도 동일한 너비 */
         }
-        
+
         .question-number {
-            font-size: 1.2em;
-            margin-bottom: 5px;
+          font-size: 1.1em;
         }
-        
+
         .question-label {
-            font-size: 0.9em;
-            opacity: 0.9;
+          font-size: 0.8em;
         }
-        
+
         .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 12px 18px;
-            background: #f8f9fa;
-            color: #333333;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          top: 15px;
+          left: 15px;
+          padding: 10px 15px;
+          font-size: 14px;
         }
-        
-        .back-btn:hover {
-            background: #e9ecef;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      }
+
+      /* 모바일 가로 화면 */
+      @media (max-width: 768px) and (orientation: landscape) {
+        body {
+          padding: 10px 15px;
         }
-        
-        .footer-info {
-            font-size: 0.9em;
-            color: #666666;
-            margin-top: 20px;
-            line-height: 1.4;
+
+        h1 {
+          font-size: 1.4em;
+          margin-bottom: 10px;
         }
-        
-        /* 모바일 세로 화면 */
-        @media (max-width: 480px) and (orientation: portrait) {
-            body {
-                padding: 15px 10px;
-            }
-            
-            h1 {
-                font-size: 1.5em;
-                margin-bottom: 12px;
-            }
-            
-            .team-info {
-                font-size: 1em;
-                margin-bottom: 8px;
-            }
-            
-            .stage-info {
-                font-size: 0.9em;
-                margin-bottom: 25px;
-            }
-            
-            .question-container {
-                gap: 12px;
-            }
-            
-            .question-button {
-                padding: 20px 12px;
-                font-size: 18px;
-                min-height: 70px;
-            }
-            
-            .question-button:nth-child(5) {
-                width: calc(50% - 6px); /* 모바일에서도 동일한 너비 */
-            }
-            
-            .question-number {
-                font-size: 1.1em;
-            }
-            
-            .question-label {
-                font-size: 0.8em;
-            }
-            
-            .back-btn {
-                top: 15px;
-                left: 15px;
-                padding: 10px 15px;
-                font-size: 14px;
-            }
+
+        .team-info,
+        .stage-info {
+          font-size: 0.9em;
+          margin-bottom: 8px;
         }
-        
-        /* 모바일 가로 화면 */
-        @media (max-width: 768px) and (orientation: landscape) {
-            body {
-                padding: 10px 15px;
-            }
-            
-            h1 {
-                font-size: 1.4em;
-                margin-bottom: 10px;
-            }
-            
-            .team-info, .stage-info {
-                font-size: 0.9em;
-                margin-bottom: 8px;
-            }
-            
-            .stage-info {
-                margin-bottom: 20px;
-            }
-            
-            .question-container {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 10px;
-                max-width: 100%;
-            }
-            
-            .question-button {
-                padding: 15px 8px;
-                font-size: 16px;
-                min-height: 60px;
-            }
-            
-            .question-button:nth-child(5) {
-                grid-column: auto; /* 가로 모드에서는 일반 크기 */
-                width: auto;
-                margin: 0;
-            }
-            
-            .question-number {
-                font-size: 1em;
-                margin-bottom: 3px;
-            }
-            
-            .question-label {
-                font-size: 0.7em;
-            }
+
+        .stage-info {
+          margin-bottom: 20px;
         }
-        
-        /* 매우 작은 화면 */
-        @media (max-width: 320px) {
-            h1 {
-                font-size: 1.3em;
-            }
-            
-            .question-button {
-                padding: 18px 10px;
-                font-size: 16px;
-                min-height: 65px;
-            }
-            
-            .question-button:nth-child(5) {
-                width: calc(50% - 6px);
-            }
+
+        .question-container {
+          grid-template-columns: repeat(5, 1fr);
+          gap: 10px;
+          max-width: 100%;
         }
-        
-        /* 큰 모바일/태블릿 */
-        @media (min-width: 481px) and (max-width: 768px) {
-            .container {
-                max-width: 500px;
-            }
-            
-            .question-container {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 18px;
-            }
-            
-            .question-button {
-                padding: 28px 18px;
-                font-size: 21px;
-                min-height: 85px;
-            }
-            
-            .question-button:nth-child(4) {
-                grid-column: 1 / 3; /* 4점 문제 2칸 차지 */
-            }
-            
-            .question-button:nth-child(5) {
-                grid-column: 3; /* 5점 문제 1칸 */
-                width: auto;
-                margin: 0;
-            }
+
+        .question-button {
+          padding: 15px 8px;
+          font-size: 16px;
+          min-height: 60px;
         }
+
+        .question-button:nth-child(5) {
+          grid-column: auto; /* 가로 모드에서는 일반 크기 */
+          width: auto;
+          margin: 0;
+        }
+
+        .question-number {
+          font-size: 1em;
+          margin-bottom: 3px;
+        }
+
+        .question-label {
+          font-size: 0.7em;
+        }
+      }
+
+      /* 매우 작은 화면 */
+      @media (max-width: 320px) {
+        h1 {
+          font-size: 1.3em;
+        }
+
+        .question-button {
+          padding: 18px 10px;
+          font-size: 16px;
+          min-height: 65px;
+        }
+
+        .question-button:nth-child(5) {
+          width: calc(50% - 6px);
+        }
+      }
+
+      /* 큰 모바일/태블릿 */
+      @media (min-width: 481px) and (max-width: 768px) {
+        .container {
+          max-width: 500px;
+        }
+
+        .question-container {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 18px;
+        }
+
+        .question-button {
+          padding: 28px 18px;
+          font-size: 21px;
+          min-height: 85px;
+        }
+
+        .question-button:nth-child(4) {
+          grid-column: 1 / 3; /* 4점 문제 2칸 차지 */
+        }
+
+        .question-button:nth-child(5) {
+          grid-column: 3; /* 5점 문제 1칸 */
+          width: auto;
+          margin: 0;
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>문제를 선택하세요</h1>
-        <div class="team-info" th:text="${teamNumber} + '조'">팀 정보</div>
-        <div class="stage-info" th:text="'스테이지 ' + ${stageNumber}">스테이지 정보</div>
-        
-        <form th:action="@{/team{stageNumber}/{teamNumber}/select(stageNumber=${stageNumber}, teamNumber=${teamNumber})}" method="post">
-            <div class="question-container">
-                <button type="submit" name="questionNumber" value="1" class="question-button">
-                    <div class="question-number">1점</div>
-                    <div class="question-label">가장 쉬움</div>
-                </button>
-                
-                <button type="submit" name="questionNumber" value="2" class="question-button">
-                    <div class="question-number">2점</div>
-                    <div class="question-label">쉬움</div>
-                </button>
-                
-                <button type="submit" name="questionNumber" value="3" class="question-button">
-                    <div class="question-number">3점</div>
-                    <div class="question-label">보통</div>
-                </button>
-                
-                <button type="submit" name="questionNumber" value="4" class="question-button">
-                    <div class="question-number">4점</div>
-                    <div class="question-label">어려움</div>
-                </button>
-                
-                <button type="submit" name="questionNumber" value="5" class="question-button">
-                    <div class="question-number">5점</div>
-                    <div class="question-label">가장 어려움</div>
-                </button>
-            </div>
-        </form>
-        
-        <div class="footer-info">
-            원하는 문제를 선택하여<br>퀴즈를 시작하세요
+      <h1>문제를 선택하세요</h1>
+      <div class="team-info" th:text="${teamNumber} + '조'">팀 정보</div>
+      <div class="stage-info" th:text="'스테이지 ' + ${stageNumber}">
+        스테이지 정보
+      </div>
+
+      <div class="warning-message">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-text">
+          <strong>주의사항</strong><br />
+          문제는 한번 선택하면 다른 문제로 변경할 수 없습니다.<br />
+          선택 후 뒤로가기를 해도 선택한 문제로 자동 이동됩니다.<br />
+          <span class="warning-emphasis">신중하게 선택해주세요!</span>
         </div>
+      </div>
+
+      <form
+        th:action="@{/team{stageNumber}/{teamNumber}/select(stageNumber=${stageNumber}, teamNumber=${teamNumber})}"
+        method="post"
+      >
+        <div class="question-container">
+          <button
+            type="submit"
+            name="questionNumber"
+            value="1"
+            class="question-button"
+          >
+            <div class="question-number">1점</div>
+            <div class="question-label">가장 쉬움</div>
+          </button>
+
+          <button
+            type="submit"
+            name="questionNumber"
+            value="2"
+            class="question-button"
+          >
+            <div class="question-number">2점</div>
+            <div class="question-label">쉬움</div>
+          </button>
+
+          <button
+            type="submit"
+            name="questionNumber"
+            value="3"
+            class="question-button"
+          >
+            <div class="question-number">3점</div>
+            <div class="question-label">보통</div>
+          </button>
+
+          <button
+            type="submit"
+            name="questionNumber"
+            value="4"
+            class="question-button"
+          >
+            <div class="question-number">4점</div>
+            <div class="question-label">어려움</div>
+          </button>
+
+          <button
+            type="submit"
+            name="questionNumber"
+            value="5"
+            class="question-button"
+          >
+            <div class="question-number">5점</div>
+            <div class="question-label">가장 어려움</div>
+          </button>
+        </div>
+      </form>
+
+      <div class="footer-info">
+        원하는 문제를 선택하여<br />퀴즈를 시작하세요
+      </div>
     </div>
-</body>
+  </body>
 </html>

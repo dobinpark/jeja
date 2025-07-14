@@ -65,9 +65,15 @@ public class InsideController {
     @GetMapping("/team{stageNumber}/{teamNumber}/select")
     public String questionSelectPage(@PathVariable int stageNumber, @PathVariable int teamNumber, Model model) {
 
-        // 🚨 이미 제출한 조인지 확인 추가
-        if (checkIfAlreadySubmitted(stageNumber, teamNumber, model)) {
+        // 이미 답안을 완전히 제출했는지 확인
+        if (quizService.hasTeamSubmittedInStage(stageNumber, teamNumber)) {
             return "inside/already-submitted" + stageNumber;
+        }
+
+        // 🆕 이미 문제를 선택했다면 해당 문제로 강제 리다이렉트
+        if (quizService.hasTeamSelectedQuestionInStage(stageNumber, teamNumber)) {
+            Integer selectedQuestionNumber = quizService.getSelectedQuestionNumber(stageNumber, teamNumber);
+            return "redirect:/team" + stageNumber + "/" + teamNumber + "/quiz/" + selectedQuestionNumber;
         }
 
         model.addAttribute("stageNumber", stageNumber);
@@ -75,7 +81,7 @@ public class InsideController {
         return "inside/question" + stageNumber;
     }
 
-    // 선택한 문제 페이지로 이동
+    // 문제 선택 처리 - 즉시 DB에 저장
     @PostMapping("/team{stageNumber}/{teamNumber}/select")
     public String selectQuestion(
             @PathVariable int stageNumber,
@@ -83,7 +89,16 @@ public class InsideController {
             @RequestParam int questionNumber,
             Model model) {
 
-        return "redirect:/team" + stageNumber + "/" + teamNumber + "/quiz/" + questionNumber;
+        try {
+            // 🆕 문제 선택 즉시 DB에 기록
+            quizService.recordQuestionSelection(stageNumber, teamNumber, questionNumber);
+            return "redirect:/team" + stageNumber + "/" + teamNumber + "/quiz/" + questionNumber;
+
+        } catch (IllegalStateException e) {
+            // 이미 선택한 경우 기존 선택한 문제로 리다이렉트
+            Integer selectedQuestionNumber = quizService.getSelectedQuestionNumber(stageNumber, teamNumber);
+            return "redirect:/team" + stageNumber + "/" + teamNumber + "/quiz/" + selectedQuestionNumber;
+        }
     }
 
     // 문제 페이지
@@ -94,9 +109,22 @@ public class InsideController {
             @PathVariable int questionNumber,
             Model model) {
 
-        // 🚨 이미 제출한 조인지 확인 추가
-        if (checkIfAlreadySubmitted(stageNumber, teamNumber, model)) {
+        // 이미 답안을 완전히 제출했는지 확인
+        if (quizService.hasTeamSubmittedInStage(stageNumber, teamNumber)) {
             return "inside/already-submitted" + stageNumber;
+        }
+
+        // 🆕 선택한 문제와 일치하는지 확인
+        Integer selectedQuestionNumber = quizService.getSelectedQuestionNumber(stageNumber, teamNumber);
+
+        if (selectedQuestionNumber == null) {
+            // 문제를 선택하지 않았다면 선택 페이지로 리다이렉트
+            return "redirect:/team" + stageNumber + "/" + teamNumber + "/select";
+        }
+
+        if (!selectedQuestionNumber.equals(questionNumber)) {
+            // 🚨 다른 문제에 접근하려고 하면 선택한 문제로 강제 리다이렉트
+            return "redirect:/team" + stageNumber + "/" + teamNumber + "/quiz/" + selectedQuestionNumber;
         }
 
         model.addAttribute("stageNumber", stageNumber);
@@ -115,9 +143,15 @@ public class InsideController {
             @RequestParam(required = false) String answer,
             Model model) {
 
-        // 🚨 이미 제출한 조인지 확인 추가
-        if (checkIfAlreadySubmitted(stageNumber, teamNumber, model)) {
+        // 이미 답안을 완전히 제출했는지 확인
+        if (quizService.hasTeamSubmittedInStage(stageNumber, teamNumber)) {
             return "inside/already-submitted" + stageNumber;
+        }
+
+        // 🆕 선택한 문제와 일치하는지 확인
+        Integer selectedQuestionNumber = quizService.getSelectedQuestionNumber(stageNumber, teamNumber);
+        if (!selectedQuestionNumber.equals(questionNumber)) {
+            return "redirect:/team" + stageNumber + "/" + teamNumber + "/quiz/" + selectedQuestionNumber;
         }
 
         model.addAttribute("stageNumber", stageNumber);

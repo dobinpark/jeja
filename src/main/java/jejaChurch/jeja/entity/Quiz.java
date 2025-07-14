@@ -18,8 +18,16 @@ public class Quiz {
     private String answer; // 제출한 답안
     private LocalDateTime submittedAt;
 
+    // 🆕 문제 선택 시점 기록
+    private LocalDateTime questionSelectedAt;
+
+    // 🆕 답안 제출 완료 여부
+    private boolean isAnswerSubmitted = false;
+
     @PrePersist
     protected void onCreate() {
-        submittedAt = LocalDateTime.now();
+        if (submittedAt == null) {
+            submittedAt = LocalDateTime.now();
+        }
     }
 }
