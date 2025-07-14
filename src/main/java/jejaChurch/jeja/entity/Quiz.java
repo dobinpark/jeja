@@ -12,16 +12,14 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int stageNumber; // 스테이지 번호
-    private int teamNumber; // 조 번호
-    private int questionNumber; // 문제 번호
-    private String answer; // 제출한 답안
+    private int stageNumber;
+    private int teamNumber;
+    private int questionNumber;
+    private String answer;
     private LocalDateTime submittedAt;
 
-    // 🆕 문제 선택 시점 기록
+    // 🆕 새로 추가된 필드들
     private LocalDateTime questionSelectedAt;
-
-    // 🆕 답안 제출 완료 여부
     private boolean isAnswerSubmitted = false;
 
     @PrePersist
