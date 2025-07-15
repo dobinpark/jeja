@@ -62,35 +62,35 @@ public class PlaceController {
     }
 
     // 1번 사업장 조 선택 페이지
-    @GetMapping("/main1")
+    @GetMapping("/place/main1")
     public String main1(Model model) {
         model.addAttribute("stageNumber", 1);
         return "place/main1";
     }
 
     // 2번 사업장 조 선택 페이지
-    @GetMapping("/main2")
+    @GetMapping("/place/main2")
     public String main2(Model model) {
         model.addAttribute("stageNumber", 2);
         return "place/main2";
     }
 
     // 3번 사업장 조 선택 페이지
-    @GetMapping("/main3")
+    @GetMapping("/place/main3")
     public String main3(Model model) {
         model.addAttribute("stageNumber", 3);
         return "place/main3";
     }
 
     // 4번 사업장 조 선택 페이지
-    @GetMapping("/main4")
+    @GetMapping("/place/main4")
     public String main4(Model model) {
         model.addAttribute("stageNumber", 4);
         return "place/main4";
     }
 
     // 1번 사업장 비밀번호 입력 페이지
-    @GetMapping("/team1/{teamNumber}")
+    @GetMapping("/place/team1/{teamNumber}")
     public String password1(@PathVariable int teamNumber, Model model) {
         if (!placeService.teamExists(teamNumber)) {
             return "error";
@@ -102,7 +102,7 @@ public class PlaceController {
     }
 
     // 2번 사업장 비밀번호 입력 페이지
-    @GetMapping("/team2/{teamNumber}")
+    @GetMapping("/place/team2/{teamNumber}")
     public String password2(@PathVariable int teamNumber, Model model) {
         if (!placeService.teamExists(teamNumber)) {
             return "error";
@@ -114,7 +114,7 @@ public class PlaceController {
     }
 
     // 3번 사업장 비밀번호 입력 페이지
-    @GetMapping("/team3/{teamNumber}")
+    @GetMapping("/place/team3/{teamNumber}")
     public String password3(@PathVariable int teamNumber, Model model) {
         if (!placeService.teamExists(teamNumber)) {
             return "error";
@@ -126,7 +126,7 @@ public class PlaceController {
     }
 
     // 4번 사업장 비밀번호 입력 페이지
-    @GetMapping("/team4/{teamNumber}")
+    @GetMapping("/place/team4/{teamNumber}")
     public String password4(@PathVariable int teamNumber, Model model) {
         if (!placeService.teamExists(teamNumber)) {
             return "error";
@@ -138,7 +138,7 @@ public class PlaceController {
     }
 
     // 1번 사업장 비밀번호 검증 후 해당 조 전용 페이지
-    @PostMapping("/team1/{teamNumber}/verify")
+    @PostMapping("/place/team1/{teamNumber}/verify")
     public String verifyPassword1(@PathVariable int teamNumber, @RequestParam String password, Model model) {
         if (!placeService.validateTeamPassword(teamNumber, password)) {
             model.addAttribute("stageNumber", 1);
@@ -154,7 +154,7 @@ public class PlaceController {
     }
 
     // 2번 사업장 비밀번호 검증 후 해당 조 전용 페이지
-    @PostMapping("/team2/{teamNumber}/verify")
+    @PostMapping("/place/team2/{teamNumber}/verify")
     public String verifyPassword2(@PathVariable int teamNumber, @RequestParam String password, Model model) {
         if (!placeService.validateTeamPassword(teamNumber, password)) {
             model.addAttribute("stageNumber", 2);
@@ -170,7 +170,7 @@ public class PlaceController {
     }
 
     // 3번 사업장 비밀번호 검증 후 해당 조 전용 페이지
-    @PostMapping("/team3/{teamNumber}/verify")
+    @PostMapping("/place/team3/{teamNumber}/verify")
     public String verifyPassword3(@PathVariable int teamNumber, @RequestParam String password, Model model) {
         if (!placeService.validateTeamPassword(teamNumber, password)) {
             model.addAttribute("stageNumber", 3);
@@ -186,7 +186,7 @@ public class PlaceController {
     }
 
     // 4번 사업장 비밀번호 검증 후 해당 조 전용 페이지
-    @PostMapping("/team4/{teamNumber}/verify")
+    @PostMapping("/place/team4/{teamNumber}/verify")
     public String verifyPassword4(@PathVariable int teamNumber, @RequestParam String password, Model model) {
         if (!placeService.validateTeamPassword(teamNumber, password)) {
             model.addAttribute("stageNumber", 4);
