@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no"
     />
-    <title th:text="'스테이지 ' + ${stageNumber} + ' - 조 선택'">조 선택</title>
+    <title th:text="'상기네무인카페' + ' - 조 선택'">조 선택</title>
     <style>
       * {
         margin: 0;
@@ -183,9 +183,7 @@
   <body>
     <div class="container">
       <h1>조를 선택하세요</h1>
-      <div class="stage-info" th:text="'사업장 ' + ${stageNumber}">
-        사업장 정보
-      </div>
+      <div class="stage-info" th:text="'상기네무인카페'">상기네무인카페</div>
 
       <div class="team-container">
         <a th:href="@{/place/team1/1}" class="team-button">1조</a>

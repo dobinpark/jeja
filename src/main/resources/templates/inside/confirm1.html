@@ -1,273 +1,307 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title th:text="'스테이지 ' + ${stageNumber} + ' - ' + ${teamNumber} + '조 답안 확인'">답안 제출 확인</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title th:text="'새봄약국 ' + ${teamNumber} + '조 답안 확인'">
+      답안 제출 확인
+    </title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #ffffff;
+        min-height: 100vh;
+        color: #333333;
+        padding: 20px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .confirm-container {
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        font-weight: 700;
+        color: #333333;
+      }
+
+      .info-header {
+        font-size: 1em;
+        color: #666666;
+        margin-bottom: 25px;
+        font-weight: 500;
+      }
+
+      .question-review {
+        background: #f8f9fa;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 15px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .question-review h3 {
+        font-size: 1.1em;
+        margin-bottom: 12px;
+        color: #333333;
+      }
+
+      .question-review p {
+        font-size: 1em;
+        line-height: 1.4;
+        font-weight: 500;
+        color: #333333;
+      }
+
+      .answer-review {
+        background: #e8f5e8;
+        padding: 18px;
+        margin: 20px 0;
+        border-radius: 15px;
+        border: 2px solid #c8e6c9;
+      }
+
+      .answer-review h3 {
+        font-size: 1.1em;
+        margin-bottom: 12px;
+        color: #43a047;
+      }
+
+      .answer-review p {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #333333;
+        word-break: break-word;
+      }
+
+      .confirmation-text {
+        margin: 25px 0;
+      }
+
+      .confirmation-text h2 {
+        font-size: 1.3em;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #333333;
+      }
+
+      .confirmation-text p {
+        font-size: 0.9em;
+        color: #666666;
+        line-height: 1.3;
+      }
+
+      .button-group {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .submit-btn {
+        background: #43a047;
+        color: white;
+        padding: 18px 25px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3);
+        width: 100%;
+      }
+
+      .submit-btn:hover,
+      .submit-btn:active {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(67, 160, 71, 0.4);
+        background: #388e3c;
+      }
+
+      .cancel-btn {
+        background: #f8f9fa;
+        color: #333333;
+        padding: 16px 25px;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .cancel-btn:hover,
+      .cancel-btn:active {
+        background: #e9ecef;
+        border-color: #dee2e6;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .form-inline {
+        display: block;
+        width: 100%;
+      }
+
+      /* 모바일 세로 화면 */
+      @media (max-width: 480px) {
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #ffffff;
-            min-height: 100vh;
-            color: #333333;
-            padding: 20px 15px;
+          padding: 15px 10px;
+        }
+
+        h1 {
+          font-size: 1.5em;
+          margin-bottom: 15px;
+        }
+
+        .info-header {
+          font-size: 0.9em;
+          margin-bottom: 20px;
+        }
+
+        .question-review,
+        .answer-review {
+          padding: 15px;
+          margin: 15px 0;
+        }
+
+        .question-review h3,
+        .answer-review h3 {
+          font-size: 1em;
+        }
+
+        .question-review p,
+        .answer-review p {
+          font-size: 0.9em;
+        }
+
+        .confirmation-text h2 {
+          font-size: 1.2em;
+        }
+
+        .confirmation-text p {
+          font-size: 0.8em;
+        }
+
+        .submit-btn,
+        .cancel-btn {
+          padding: 16px 20px;
+          font-size: 15px;
+        }
+      }
+
+      /* 모바일 가로 화면 */
+      @media (max-width: 768px) and (orientation: landscape) {
+        body {
+          padding: 10px 15px;
+        }
+
+        h1 {
+          font-size: 1.4em;
+          margin-bottom: 12px;
+        }
+
+        .button-group {
+          flex-direction: row;
+          gap: 12px;
+        }
+
+        .submit-btn,
+        .cancel-btn {
+          padding: 14px 20px;
+          font-size: 14px;
+        }
+      }
+
+      /* 매우 작은 화면 */
+      @media (max-width: 320px) {
+        h1 {
+          font-size: 1.3em;
+        }
+
+        .question-review,
+        .answer-review {
+          padding: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="confirm-container">
+      <h1>답안 제출 확인</h1>
+      <div
+        class="info-header"
+        th:text="'새봄약국 ' + ${teamNumber} + '조 | ' + ${questionNumber} + '번 문제'"
+      >
+        새봄약국
+      </div>
+
+      <div class="question-review">
+        <h3>📝 문제:</h3>
+        <p th:text="${questionNumber} + '번 문제'">문제 내용</p>
+      </div>
+
+      <div class="answer-review">
+        <h3>✅ 제출할 답안:</h3>
+        <p th:text="${answer}">답안 내용</p>
+      </div>
+
+      <div class="confirmation-text">
+        <h2>정말 제출하시겠습니까?</h2>
+        <p>제출 후에는 답안을 수정할 수 없습니다.</p>
+      </div>
+
+      <div class="button-group">
+        <!-- 최종 제출 -->
+        <form
+          class="form-inline"
+          th:action="@{/team{stageNumber}/{teamNumber}/submit(stageNumber=${stageNumber}, teamNumber=${teamNumber})}"
+          method="post"
+        >
+          <input
+            type="hidden"
+            name="questionNumber"
+            th:value="${questionNumber}"
+          />
+          <input type="hidden" name="answer" th:value="${answer}" />
+          <button type="submit" class="submit-btn">✅ 네, 제출합니다</button>
+        </form>
+
+        <!-- 취소 (문제 페이지로 돌아가기) -->
+        <a
+          th:href="@{/team{stageNumber}/{teamNumber}/quiz/{questionNumber}(stageNumber=${stageNumber}, teamNumber=${teamNumber}, questionNumber=${questionNumber})}"
+          class="cancel-btn"
+          style="
+            text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        
-        .confirm-container {
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            font-weight: 700;
-            color: #333333;
-        }
-        
-        .info-header {
-            font-size: 1em;
-            color: #666666;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-        
-        .question-review {
-            background: #f8f9fa;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 15px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        }
-        
-        .question-review h3 {
-            font-size: 1.1em;
-            margin-bottom: 12px;
-            color: #333333;
-        }
-        
-        .question-review p {
-            font-size: 1em;
-            line-height: 1.4;
-            font-weight: 500;
-            color: #333333;
-        }
-        
-        .answer-review {
-            background: #e8f5e8;
-            padding: 18px;
-            margin: 20px 0;
-            border-radius: 15px;
-            border: 2px solid #c8e6c9;
-        }
-        
-        .answer-review h3 {
-            font-size: 1.1em;
-            margin-bottom: 12px;
-            color: #43a047;
-        }
-        
-        .answer-review p {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #333333;
-            word-break: break-word;
-        }
-        
-        .confirmation-text {
-            margin: 25px 0;
-        }
-        
-        .confirmation-text h2 {
-            font-size: 1.3em;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #333333;
-        }
-        
-        .confirmation-text p {
-            font-size: 0.9em;
-            color: #666666;
-            line-height: 1.3;
-        }
-        
-        .button-group {
-            margin-top: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .submit-btn {
-            background: #43a047;
-            color: white;
-            padding: 18px 25px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3);
-            width: 100%;
-        }
-        
-        .submit-btn:hover,
-        .submit-btn:active {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(67, 160, 71, 0.4);
-            background: #388e3c;
-        }
-        
-        .cancel-btn {
-            background: #f8f9fa;
-            color: #333333;
-            padding: 16px 25px;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .cancel-btn:hover,
-        .cancel-btn:active {
-            background: #e9ecef;
-            border-color: #dee2e6;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        
-        .form-inline {
-            display: block;
-            width: 100%;
-        }
-        
-        /* 모바일 세로 화면 */
-        @media (max-width: 480px) {
-            body {
-                padding: 15px 10px;
-            }
-            
-            h1 {
-                font-size: 1.5em;
-                margin-bottom: 15px;
-            }
-            
-            .info-header {
-                font-size: 0.9em;
-                margin-bottom: 20px;
-            }
-            
-            .question-review, .answer-review {
-                padding: 15px;
-                margin: 15px 0;
-            }
-            
-            .question-review h3, .answer-review h3 {
-                font-size: 1em;
-            }
-            
-            .question-review p, .answer-review p {
-                font-size: 0.9em;
-            }
-            
-            .confirmation-text h2 {
-                font-size: 1.2em;
-            }
-            
-            .confirmation-text p {
-                font-size: 0.8em;
-            }
-            
-            .submit-btn, .cancel-btn {
-                padding: 16px 20px;
-                font-size: 15px;
-            }
-        }
-        
-        /* 모바일 가로 화면 */
-        @media (max-width: 768px) and (orientation: landscape) {
-            body {
-                padding: 10px 15px;
-            }
-            
-            h1 {
-                font-size: 1.4em;
-                margin-bottom: 12px;
-            }
-            
-            .button-group {
-                flex-direction: row;
-                gap: 12px;
-            }
-            
-            .submit-btn, .cancel-btn {
-                padding: 14px 20px;
-                font-size: 14px;
-            }
-        }
-        
-        /* 매우 작은 화면 */
-        @media (max-width: 320px) {
-            h1 {
-                font-size: 1.3em;
-            }
-            
-            .question-review, .answer-review {
-                padding: 12px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="confirm-container">
-        <h1>답안 제출 확인</h1>
-        <div class="info-header" th:text="'스테이지 ' + ${stageNumber} + ' | ' + ${teamNumber} + '조 | ' + ${questionNumber} + '번 문제'">문제 정보</div>
-        
-        <div class="question-review">
-            <h3>📝 문제:</h3>
-            <p th:text="${questionNumber} + '번 문제'">문제 내용</p>
-        </div>
-        
-        <div class="answer-review">
-            <h3>✅ 제출할 답안:</h3>
-            <p th:text="${answer}">답안 내용</p>
-        </div>
-        
-        <div class="confirmation-text">
-            <h2>정말 제출하시겠습니까?</h2>
-            <p>제출 후에는 답안을 수정할 수 없습니다.</p>
-        </div>
-        
-        <div class="button-group">
-            <!-- 최종 제출 -->
-            <form class="form-inline" th:action="@{/team{stageNumber}/{teamNumber}/submit(stageNumber=${stageNumber}, teamNumber=${teamNumber})}" method="post">
-                <input type="hidden" name="questionNumber" th:value="${questionNumber}">
-                <input type="hidden" name="answer" th:value="${answer}">
-                <button type="submit" class="submit-btn">✅ 네, 제출합니다</button>
-            </form>
-            
-            <!-- 취소 (문제 페이지로 돌아가기) -->
-            <a th:href="@{/team{stageNumber}/{teamNumber}/quiz/{questionNumber}(stageNumber=${stageNumber}, teamNumber=${teamNumber}, questionNumber=${questionNumber})}" class="cancel-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                ↩️ 아니요, 다시 풀겠습니다
-            </a>
-        </div>
+          "
+        >
+          ↩️ 아니요, 다시 풀겠습니다
+        </a>
+      </div>
     </div>
-</body>
+  </body>
 </html>

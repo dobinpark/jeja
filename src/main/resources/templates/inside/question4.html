@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no"
     />
     <title
-      th:text="'스테이지 ' + ${stageNumber} + ' - ' + ${teamNumber} + '조 문제 선택'"
+      th:text="'카페드림 ' + ${stageNumber} + ' - ' + ${teamNumber} + '조 문제 선택'"
     >
       문제 선택
     </title>
@@ -368,9 +368,7 @@
     <div class="container">
       <h1>문제를 선택하세요</h1>
       <div class="team-info" th:text="${teamNumber} + '조'">팀 정보</div>
-      <div class="stage-info" th:text="'스테이지 ' + ${stageNumber}">
-        스테이지 정보
-      </div>
+      <div class="stage-info" th:text="'카페드림'">카페드림</div>
 
       <div class="warning-message">
         <div class="warning-icon">⚠️</div>

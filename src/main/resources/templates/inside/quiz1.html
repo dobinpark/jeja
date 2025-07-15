@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no"
     />
     <title
-      th:text="'스테이지 ' + ${stageNumber} + ' - ' + ${teamNumber} + '조 ' + ${questionNumber} + '번 문제'"
+      th:text="'새봄약국 '+ ${teamNumber} + '조 ' + ${questionNumber} + '번 문제'"
     >
       문제 페이지
     </title>
@@ -211,10 +211,7 @@
   <body>
     <div class="container">
       <div class="header">
-        <div
-          class="question-info"
-          th:text="'스테이지 ' + ${stageNumber} + ' | ' + ${teamNumber} + '조'"
-        >
+        <div class="question-info" th:text="'새봄약국 ' + ${teamNumber} + '조'">
           문제 정보
         </div>
         <div class="question-title" th:text="${questionNumber} + '번 문제'">

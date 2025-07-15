@@ -1,249 +1,265 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title th:text="'스테이지 ' + ${stageNumber} + ' - ' + ${teamNumber} + '조 제출 완료'">제출 완료</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title th:text="'상기네무인카페 ' + ${teamNumber} + '조 제출 완료'">
+      제출 완료
+    </title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #ffffff;
+        min-height: 100vh;
+        color: #333333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 15px;
+      }
+
+      .complete-container {
+        text-align: center;
+        max-width: 450px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .success-icon {
+        font-size: 4em;
+        margin-bottom: 20px;
+        animation: bounce 2s infinite;
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
         }
-        
+        40% {
+          transform: translateY(-10px);
+        }
+        60% {
+          transform: translateY(-5px);
+        }
+      }
+
+      .success-message {
+        font-size: 2em;
+        margin-bottom: 25px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #333333;
+      }
+
+      .completion-info {
+        background: #f8f9fa;
+        padding: 25px 20px;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e9ecef;
+        margin-bottom: 30px;
+      }
+
+      .team-info {
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        font-weight: 600;
+        color: #43a047;
+      }
+
+      .stage-info {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        color: #666666;
+      }
+
+      .submission-details {
+        font-size: 1em;
+        color: #666666;
+        line-height: 1.4;
+      }
+
+      .next-step {
+        font-size: 1.1em;
+        margin-top: 25px;
+        padding: 20px;
+        background: #e8f5e8;
+        border-radius: 15px;
+        border: 1px solid #c8e6c9;
+        line-height: 1.4;
+        color: #333333;
+      }
+
+      .next-step strong {
+        color: #43a047;
+      }
+
+      .celebration-text {
+        font-size: 0.9em;
+        color: #666666;
+        margin-top: 20px;
+        font-style: italic;
+      }
+
+      /* 모바일 세로 화면 */
+      @media (max-width: 480px) {
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #ffffff;
-            min-height: 100vh;
-            color: #333333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px 15px;
+          padding: 15px 10px;
         }
-        
-        .complete-container {
-            text-align: center;
-            max-width: 450px;
-            width: 100%;
-            margin: 0 auto;
-        }
-        
+
         .success-icon {
-            font-size: 4em;
-            margin-bottom: 20px;
-            animation: bounce 2s infinite;
+          font-size: 3em;
+          margin-bottom: 15px;
         }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-        
+
         .success-message {
-            font-size: 2em;
-            margin-bottom: 25px;
-            font-weight: 700;
-            line-height: 1.2;
-            color: #333333;
+          font-size: 1.6em;
+          margin-bottom: 20px;
         }
-        
+
         .completion-info {
-            background: #f8f9fa;
-            padding: 25px 20px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid #e9ecef;
-            margin-bottom: 30px;
+          padding: 20px 15px;
+          margin-bottom: 25px;
         }
-        
+
         .team-info {
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            font-weight: 600;
-            color: #43a047;
+          font-size: 1.2em;
+          margin-bottom: 12px;
         }
-        
+
         .stage-info {
-            font-size: 1.1em;
-            margin-bottom: 15px;
-            color: #666666;
+          font-size: 1em;
+          margin-bottom: 12px;
         }
-        
+
         .submission-details {
-            font-size: 1em;
-            color: #666666;
-            line-height: 1.4;
+          font-size: 0.9em;
         }
-        
+
         .next-step {
-            font-size: 1.1em;
-            margin-top: 25px;
-            padding: 20px;
-            background: #e8f5e8;
-            border-radius: 15px;
-            border: 1px solid #c8e6c9;
-            line-height: 1.4;
-            color: #333333;
+          font-size: 1em;
+          padding: 18px;
+          margin-top: 20px;
         }
-        
-        .next-step strong {
-            color: #43a047;
-        }
-        
+
         .celebration-text {
-            font-size: 0.9em;
-            color: #666666;
-            margin-top: 20px;
-            font-style: italic;
+          font-size: 0.8em;
+          margin-top: 15px;
         }
-        
-        /* 모바일 세로 화면 */
-        @media (max-width: 480px) {
-            body {
-                padding: 15px 10px;
-            }
-            
-            .success-icon {
-                font-size: 3em;
-                margin-bottom: 15px;
-            }
-            
-            .success-message {
-                font-size: 1.6em;
-                margin-bottom: 20px;
-            }
-            
-            .completion-info {
-                padding: 20px 15px;
-                margin-bottom: 25px;
-            }
-            
-            .team-info {
-                font-size: 1.2em;
-                margin-bottom: 12px;
-            }
-            
-            .stage-info {
-                font-size: 1em;
-                margin-bottom: 12px;
-            }
-            
-            .submission-details {
-                font-size: 0.9em;
-            }
-            
-            .next-step {
-                font-size: 1em;
-                padding: 18px;
-                margin-top: 20px;
-            }
-            
-            .celebration-text {
-                font-size: 0.8em;
-                margin-top: 15px;
-            }
+      }
+
+      /* 모바일 가로 화면 */
+      @media (max-width: 768px) and (orientation: landscape) {
+        body {
+          padding: 10px 15px;
         }
-        
-        /* 모바일 가로 화면 */
-        @media (max-width: 768px) and (orientation: landscape) {
-            body {
-                padding: 10px 15px;
-            }
-            
-            .success-icon {
-                font-size: 2.5em;
-                margin-bottom: 12px;
-            }
-            
-            .success-message {
-                font-size: 1.4em;
-                margin-bottom: 15px;
-            }
-            
-            .completion-info {
-                padding: 18px 15px;
-                margin-bottom: 20px;
-            }
-            
-            .team-info {
-                font-size: 1.1em;
-                margin-bottom: 10px;
-            }
-            
-            .stage-info {
-                font-size: 0.9em;
-                margin-bottom: 10px;
-            }
-            
-            .next-step {
-                font-size: 0.9em;
-                padding: 15px;
-                margin-top: 15px;
-            }
+
+        .success-icon {
+          font-size: 2.5em;
+          margin-bottom: 12px;
         }
-        
-        /* 매우 작은 화면 */
-        @media (max-width: 320px) {
-            .success-message {
-                font-size: 1.4em;
-            }
-            
-            .team-info {
-                font-size: 1.1em;
-            }
-            
-            .stage-info {
-                font-size: 0.9em;
-            }
+
+        .success-message {
+          font-size: 1.4em;
+          margin-bottom: 15px;
         }
-        
-        /* 큰 모바일/태블릿 */
-        @media (min-width: 481px) and (max-width: 768px) {
-            .complete-container {
-                max-width: 500px;
-            }
-            
-            .success-message {
-                font-size: 2.2em;
-            }
-            
-            .team-info {
-                font-size: 1.4em;
-            }
-            
-            .stage-info {
-                font-size: 1.2em;
-            }
+
+        .completion-info {
+          padding: 18px 15px;
+          margin-bottom: 20px;
         }
+
+        .team-info {
+          font-size: 1.1em;
+          margin-bottom: 10px;
+        }
+
+        .stage-info {
+          font-size: 0.9em;
+          margin-bottom: 10px;
+        }
+
+        .next-step {
+          font-size: 0.9em;
+          padding: 15px;
+          margin-top: 15px;
+        }
+      }
+
+      /* 매우 작은 화면 */
+      @media (max-width: 320px) {
+        .success-message {
+          font-size: 1.4em;
+        }
+
+        .team-info {
+          font-size: 1.1em;
+        }
+
+        .stage-info {
+          font-size: 0.9em;
+        }
+      }
+
+      /* 큰 모바일/태블릿 */
+      @media (min-width: 481px) and (max-width: 768px) {
+        .complete-container {
+          max-width: 500px;
+        }
+
+        .success-message {
+          font-size: 2.2em;
+        }
+
+        .team-info {
+          font-size: 1.4em;
+        }
+
+        .stage-info {
+          font-size: 1.2em;
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="complete-container">
-        <div class="success-icon">🎉</div>
-        <div class="success-message">수고하셨습니다!</div>
-        
-        <div class="completion-info">
-            <div class="team-info" th:text="${teamNumber} + '조'">팀 정보</div>
-            <div class="stage-info" th:text="'스테이지 ' + ${stageNumber} + ' 완료'">스테이지 정보</div>
-            <div class="submission-details">
-                답안이 성공적으로 제출되었습니다.<br>
-                제출 시간: <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')}">현재 시간</span>
-            </div>
+      <div class="success-icon">🎉</div>
+      <div class="success-message">수고하셨습니다!</div>
+
+      <div class="completion-info">
+        <div class="team-info" th:text="${teamNumber} + '조'">팀 정보</div>
+        <div class="stage-info" th:text="'상기네무인카페 ' + ' 완료'">
+          상기네무인카페
         </div>
-        
-        <div class="next-step">
-            <strong>옆의 QR을 확인하세요</strong><br>
-            장소 QR 코드를 스캔하셔서<br>
-            다음 장소로 이동해 주세요.
+        <div class="submission-details">
+          답안이 성공적으로 제출되었습니다.<br />
+          제출 시간:
+          <span
+            th:text="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')}"
+            >현재 시간</span
+          >
         </div>
+      </div>
+
+      <div class="next-step">
+        <strong>옆의 QR을 확인하세요</strong><br />
+        장소 QR 코드를 스캔하셔서<br />
+        다음 장소로 이동해 주세요.
+      </div>
     </div>
-</body>
+  </body>
 </html>
