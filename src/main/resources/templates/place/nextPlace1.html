@@ -27,6 +27,18 @@
         border-radius: 20px;
         margin: 20px 0;
       }
+
+      .notice-message {
+        color: red;
+        font-size: 1.1em;
+        font-weight: bold;
+        line-height: 1.5;
+        margin-top: 20px;
+        padding: 15px;
+        border: 2px solid red;
+        border-radius: 10px;
+        background-color: #ffebee;
+      }
     </style>
   </head>
   <body>
@@ -71,9 +83,13 @@
           alt="6조 전용 이미지"
           class="team-image"
         />
-      </div>
 
-      <a th:href="@{/place/main1}">조 선택으로 돌아가기</a>
+        <!-- 빨간색 안내 메시지 -->
+        <div class="notice-message">
+          다음 장소 이동 중 근처 인생네컷(포토이즘, 포토 시그니처 등)에 들려
+          단체사진 촬영하고 사진 + 동영상을 본부로 전송하세요.
+        </div>
+      </div>
     </div>
   </body>
 </html>
