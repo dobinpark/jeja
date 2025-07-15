@@ -31,8 +31,8 @@ public class AdminService {
 
             List<TeamSubmissionMatrix> matrix = new ArrayList<>();
 
-            // 1조부터 5조까지 처리
-            for (int teamNumber = 1; teamNumber <= 5; teamNumber++) {
+            // 1조부터 6조까지 처리
+            for (int teamNumber = 1; teamNumber <= 6; teamNumber++) {
                 TeamSubmissionMatrix teamMatrix = new TeamSubmissionMatrix();
                 teamMatrix.setTeamName(teamNumber + "조");
                 teamMatrix.setTeamNumber(teamNumber);
