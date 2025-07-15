@@ -12,8 +12,8 @@ public class PlaceController {
     @GetMapping("/place/{imageName}")
     public String showPlaceImage(@PathVariable String imageName, Model model) {
 
-        // 이미지명 유효성 검사 (영문, 숫자, 하이픈, 언더스코어만 허용)
-        if (!imageName.matches("^[a-zA-Z0-9_-]+$")) {
+        // 이미지명 유효성 검사 (영문, 숫자, 한글, 하이픈, 언더스코어만 허용)
+        if (!imageName.matches("^[a-zA-Z0-9가-힣_-]+$")) {
             return "redirect:/place/default"; // 잘못된 이미지명이면 기본 이미지로
         }
 

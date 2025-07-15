@@ -59,49 +59,24 @@
         margin-bottom: 25px;
       }
 
+      .question-image {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
       .question-text {
         font-size: 1.2em;
         font-weight: 600;
         margin-bottom: 25px;
         line-height: 1.4;
         text-align: center;
-        color: #333333;
-      }
-
-      /* 객관식 스타일 */
-      .multiple-choice {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .choice-item {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        background: #ffffff;
-        border-radius: 12px;
-        border: 2px solid #e9ecef;
-        transition: all 0.3s ease;
-        cursor: pointer;
-      }
-
-      .choice-item:hover {
-        background: #f8f9fa;
-        border-color: #43a047;
-      }
-
-      .choice-item input[type="radio"] {
-        margin-right: 12px;
-        transform: scale(1.2);
-        accent-color: #43a047;
-      }
-
-      .choice-item label {
-        font-size: 1em;
-        font-weight: 500;
-        cursor: pointer;
-        flex: 1;
         color: #333333;
       }
 
@@ -174,12 +149,9 @@
           padding: 20px 15px;
         }
 
-        .choice-item {
-          padding: 12px;
-        }
-
-        .choice-item label {
-          font-size: 0.9em;
+        .question-image {
+          max-width: 100%;
+          margin-bottom: 15px;
         }
 
         .subjective-answer {
@@ -219,8 +191,9 @@
           margin-bottom: 20px;
         }
 
-        .choice-item {
-          padding: 10px;
+        .question-image {
+          max-width: 300px;
+          margin-bottom: 15px;
         }
 
         .subjective-answer {
@@ -255,34 +228,28 @@
       >
         <!-- 1번 문제 -->
         <div th:if="${questionNumber == 1}" class="question-container">
-          <div class="question-text">여기에 1번 문제 내용을 입력하세요</div>
-
-          <!-- 객관식 예시 -->
-          <div class="multiple-choice">
-            <div class="choice-item">
-              <input type="radio" name="answer" value="A" id="q1_a" />
-              <label for="q1_a">선택지 A</label>
-            </div>
-            <div class="choice-item">
-              <input type="radio" name="answer" value="B" id="q1_b" />
-              <label for="q1_b">선택지 B</label>
-            </div>
-            <div class="choice-item">
-              <input type="radio" name="answer" value="C" id="q1_c" />
-              <label for="q1_c">선택지 C</label>
-            </div>
-            <div class="choice-item">
-              <input type="radio" name="answer" value="D" id="q1_d" />
-              <label for="q1_d">선택지 D</label>
-            </div>
-          </div>
+          <img
+            th:src="@{/images/quiz/새봄약국 1단계.jpg}"
+            alt="1번 문제 이미지"
+            class="question-image"
+          />
+          <div class="question-text">위 이미지를 보고 답을 작성하세요</div>
+          <textarea
+            name="answer"
+            class="subjective-answer"
+            placeholder="답안을 입력하세요"
+            required
+          ></textarea>
         </div>
 
         <!-- 2번 문제 -->
         <div th:if="${questionNumber == 2}" class="question-container">
-          <div class="question-text">여기에 2번 문제 내용을 입력하세요</div>
-
-          <!-- 주관식 예시 -->
+          <img
+            th:src="@{/images/quiz/새봄약국 2단계.jpg}"
+            alt="2번 문제 이미지"
+            class="question-image"
+          />
+          <div class="question-text">위 이미지를 보고 답을 작성하세요</div>
           <textarea
             name="answer"
             class="subjective-answer"
@@ -293,34 +260,28 @@
 
         <!-- 3번 문제 -->
         <div th:if="${questionNumber == 3}" class="question-container">
-          <div class="question-text">여기에 3번 문제 내용을 입력하세요</div>
-
-          <!-- 객관식 예시 -->
-          <div class="multiple-choice">
-            <div class="choice-item">
-              <input type="radio" name="answer" value="A" id="q3_a" />
-              <label for="q3_a">선택지 A</label>
-            </div>
-            <div class="choice-item">
-              <input type="radio" name="answer" value="B" id="q3_b" />
-              <label for="q3_b">선택지 B</label>
-            </div>
-            <div class="choice-item">
-              <input type="radio" name="answer" value="C" id="q3_c" />
-              <label for="q3_c">선택지 C</label>
-            </div>
-            <div class="choice-item">
-              <input type="radio" name="answer" value="D" id="q3_d" />
-              <label for="q3_d">선택지 D</label>
-            </div>
-          </div>
+          <img
+            th:src="@{/images/quiz/새봄약국 3단계.jpg}"
+            alt="3번 문제 이미지"
+            class="question-image"
+          />
+          <div class="question-text">위 이미지를 보고 답을 작성하세요</div>
+          <textarea
+            name="answer"
+            class="subjective-answer"
+            placeholder="답안을 입력하세요"
+            required
+          ></textarea>
         </div>
 
         <!-- 4번 문제 -->
         <div th:if="${questionNumber == 4}" class="question-container">
-          <div class="question-text">여기에 4번 문제 내용을 입력하세요</div>
-
-          <!-- 주관식 예시 -->
+          <img
+            th:src="@{/images/quiz/새봄약국 4단계.jpg}"
+            alt="4번 문제 이미지"
+            class="question-image"
+          />
+          <div class="question-text">위 이미지를 보고 답을 작성하세요</div>
           <textarea
             name="answer"
             class="subjective-answer"
@@ -331,27 +292,18 @@
 
         <!-- 5번 문제 -->
         <div th:if="${questionNumber == 5}" class="question-container">
-          <div class="question-text">여기에 5번 문제 내용을 입력하세요</div>
-
-          <!-- 객관식 예시 -->
-          <div class="multiple-choice">
-            <div class="choice-item">
-              <input type="radio" name="answer" value="A" id="q5_a" />
-              <label for="q5_a">선택지 A</label>
-            </div>
-            <div class="choice-item">
-              <input type="radio" name="answer" value="B" id="q5_b" />
-              <label for="q5_b">선택지 B</label>
-            </div>
-            <div class="choice-item">
-              <input type="radio" name="answer" value="C" id="q5_c" />
-              <label for="q5_c">선택지 C</label>
-            </div>
-            <div class="choice-item">
-              <input type="radio" name="answer" value="D" id="q5_d" />
-              <label for="q5_d">선택지 D</label>
-            </div>
-          </div>
+          <img
+            th:src="@{/images/quiz/새봄약국 5단계.jpg}"
+            alt="5번 문제 이미지"
+            class="question-image"
+          />
+          <div class="question-text">위 이미지를 보고 답을 작성하세요</div>
+          <textarea
+            name="answer"
+            class="subjective-answer"
+            placeholder="답안을 입력하세요"
+            required
+          ></textarea>
         </div>
 
         <button type="submit" class="submit-btn">답안 제출</button>
