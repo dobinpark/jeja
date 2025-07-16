@@ -111,7 +111,7 @@ public class PlaceController {
 
         model.addAttribute("stageNumber", 1);
         model.addAttribute("teamNumber", teamNumber);
-        return "place/password1";
+        return "place/password0";
     }
 
     // 1번 사업장 비밀번호 입력 페이지
