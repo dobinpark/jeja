@@ -37,6 +37,12 @@ public class PlaceController {
         return "place/placeImage";
     }
 
+    // 0번 사업장 QR코드 스캔 시 → 조 선택 페이지로
+    @GetMapping("/place0")
+    public String place0ToMain(Model model) {
+        return "redirect:/place/main0";
+    }
+
     // 1번 사업장 QR코드 스캔 시 → 조 선택 페이지로
     @GetMapping("/place1")
     public String place1ToMain(Model model) {
@@ -59,6 +65,13 @@ public class PlaceController {
     @GetMapping("/place4")
     public String place4ToMain(Model model) {
         return "redirect:/place/main4";
+    }
+
+    // 0번 사업장 조 선택 페이지
+    @GetMapping("/place/main0")
+    public String main0(Model model) {
+        model.addAttribute("stageNumber", 1);
+        return "place/main0";
     }
 
     // 1번 사업장 조 선택 페이지
@@ -87,6 +100,18 @@ public class PlaceController {
     public String main4(Model model) {
         model.addAttribute("stageNumber", 4);
         return "place/main4";
+    }
+
+    // 0번 사업장 비밀번호 입력 페이지
+    @GetMapping("/place/team0/{teamNumber}")
+    public String password0(@PathVariable int teamNumber, Model model) {
+        if (!placeService.teamExists(teamNumber)) {
+            return "error";
+        }
+
+        model.addAttribute("stageNumber", 1);
+        model.addAttribute("teamNumber", teamNumber);
+        return "place/password1";
     }
 
     // 1번 사업장 비밀번호 입력 페이지
@@ -135,6 +160,22 @@ public class PlaceController {
         model.addAttribute("stageNumber", 4);
         model.addAttribute("teamNumber", teamNumber);
         return "place/password4";
+    }
+
+    // 0번 사업장 비밀번호 검증 후 해당 조 전용 페이지
+    @PostMapping("/place/team0/{teamNumber}/verify")
+    public String verifyPassword0(@PathVariable int teamNumber, @RequestParam String password, Model model) {
+        if (!placeService.validateTeamPassword(teamNumber, password)) {
+            model.addAttribute("stageNumber", 1);
+            model.addAttribute("teamNumber", teamNumber);
+            model.addAttribute("error", "비밀번호가 틀렸습니다.");
+            return "place/password0";
+        }
+
+        model.addAttribute("stageNumber", 1);
+        model.addAttribute("teamNumber", teamNumber);
+
+        return "place/nextPlace0";
     }
 
     // 1번 사업장 비밀번호 검증 후 해당 조 전용 페이지
