@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import jejaChurch.jeja.entity.Team;
 import jejaChurch.jeja.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 
