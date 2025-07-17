@@ -39,6 +39,17 @@
         border-radius: 10px;
         background-color: #ffebee;
       }
+
+      .instruction-text {
+        color: #333;
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #e8f5e8;
+        border-radius: 10px;
+        border: 2px solid #4caf50;
+      }
     </style>
   </head>
   <body>
@@ -46,7 +57,7 @@
       <h1 th:text="'사업장 미션 - ' + ${teamNumber} + '조'">조 제목</h1>
 
       <div class="image-container">
-        <!-- 1번 사업장 조별 이미지 직접 지정 -->
+        <!-- 0번 사업장 조별 이미지 직접 지정 -->
         <img
           th:if="${teamNumber == 1}"
           src="/images/새봄약국.JPG"
@@ -83,7 +94,12 @@
           alt="6조 전용 이미지"
           class="team-image"
         />
-        </div>
+      </div>
+
+      <!-- 추가된 안내 텍스트 -->
+      <div class="instruction-text">
+        해당 사업장에 가셔서 QR 2개를 찾으세요.<br />
+        (문제 QR, 장소 힌트 QR)
       </div>
     </div>
   </body>
