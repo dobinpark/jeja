@@ -67,10 +67,16 @@ public class PlaceController {
         return "redirect:/place/main4";
     }
 
+    // 외부 관광지 2번 사진 QR코드 스캔 시 → 조 선택 페이지로
+    @GetMapping("/place5")
+    public String place5ToMain(Model model) {
+        return "redirect:/place/main5";
+    }
+
     // 0번 사업장 조 선택 페이지
     @GetMapping("/place/main0")
     public String main0(Model model) {
-        model.addAttribute("stageNumber", 1);
+        model.addAttribute("stageNumber", 0);
         return "place/main0";
     }
 
@@ -100,6 +106,13 @@ public class PlaceController {
     public String main4(Model model) {
         model.addAttribute("stageNumber", 4);
         return "place/main4";
+    }
+
+    // 외부 관광지 2번 사진 조 선택 페이지
+    @GetMapping("/place/main5")
+    public String main5(Model model) {
+        model.addAttribute("stageNumber", 5);
+        return "place/main5";
     }
 
     // 0번 사업장 비밀번호 입력 페이지
@@ -160,6 +173,18 @@ public class PlaceController {
         model.addAttribute("stageNumber", 4);
         model.addAttribute("teamNumber", teamNumber);
         return "place/password4";
+    }
+
+    // 외부 관광지 2번 사진 비밀번호 입력 페이지
+    @GetMapping("/place/team5/{teamNumber}")
+    public String password5(@PathVariable int teamNumber, Model model) {
+        if (!placeService.teamExists(teamNumber)) {
+            return "error";
+        }
+
+        model.addAttribute("stageNumber", 4);
+        model.addAttribute("teamNumber", teamNumber);
+        return "place/password5";
     }
 
     // 0번 사업장 비밀번호 검증 후 해당 조 전용 페이지
@@ -240,5 +265,21 @@ public class PlaceController {
         model.addAttribute("teamNumber", teamNumber);
 
         return "place/nextPlace4";
+    }
+
+    // 외부 관광지 비밀번호 검증 후 해당 조 전용 페이지
+    @PostMapping("/place/team5/{teamNumber}/verify")
+    public String verifyPassword5(@PathVariable int teamNumber, @RequestParam String password, Model model) {
+        if (!placeService.validateTeamPassword(teamNumber, password)) {
+            model.addAttribute("stageNumber", 4);
+            model.addAttribute("teamNumber", teamNumber);
+            model.addAttribute("error", "비밀번호가 틀렸습니다.");
+            return "place/password5";
+        }
+
+        model.addAttribute("stageNumber", 4);
+        model.addAttribute("teamNumber", teamNumber);
+
+        return "place/nextPlace5";
     }
 }
