@@ -122,7 +122,7 @@ public class PlaceController {
             return "error";
         }
 
-        model.addAttribute("stageNumber", 1);
+        model.addAttribute("stageNumber", 0);
         model.addAttribute("teamNumber", teamNumber);
         return "place/password0";
     }
@@ -182,7 +182,7 @@ public class PlaceController {
             return "error";
         }
 
-        model.addAttribute("stageNumber", 4);
+        model.addAttribute("stageNumber", 5);
         model.addAttribute("teamNumber", teamNumber);
         return "place/password5";
     }
@@ -191,13 +191,13 @@ public class PlaceController {
     @PostMapping("/place/team0/{teamNumber}/verify")
     public String verifyPassword0(@PathVariable int teamNumber, @RequestParam String password, Model model) {
         if (!placeService.validateTeamPassword(teamNumber, password)) {
-            model.addAttribute("stageNumber", 1);
+            model.addAttribute("stageNumber", 0);
             model.addAttribute("teamNumber", teamNumber);
             model.addAttribute("error", "비밀번호가 틀렸습니다.");
             return "place/password0";
         }
 
-        model.addAttribute("stageNumber", 1);
+        model.addAttribute("stageNumber", 0);
         model.addAttribute("teamNumber", teamNumber);
 
         return "place/nextPlace0";
@@ -271,13 +271,13 @@ public class PlaceController {
     @PostMapping("/place/team5/{teamNumber}/verify")
     public String verifyPassword5(@PathVariable int teamNumber, @RequestParam String password, Model model) {
         if (!placeService.validateTeamPassword(teamNumber, password)) {
-            model.addAttribute("stageNumber", 4);
+            model.addAttribute("stageNumber", 5);
             model.addAttribute("teamNumber", teamNumber);
             model.addAttribute("error", "비밀번호가 틀렸습니다.");
             return "place/password5";
         }
 
-        model.addAttribute("stageNumber", 4);
+        model.addAttribute("stageNumber", 5);
         model.addAttribute("teamNumber", teamNumber);
 
         return "place/nextPlace5";
